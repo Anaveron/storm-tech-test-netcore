@@ -9,9 +9,11 @@ namespace Todo.EntityModelMappers.TodoLists
 {
     public static class TodoListDetailViewmodelFactory
     {
-        public static TodoListDetailViewmodel Create(TodoList todoList, bool descending)
+        public static TodoListDetailViewmodel Create(TodoList todoList, bool descending, bool doneItemsHidden)
         {
-            var items = todoList.Items
+            var items = todoList
+                .Items
+                .Where(p => !doneItemsHidden || p.IsDone == false)
                 .Select(TodoItemSummaryViewmodelFactory.Create)
                 .OrderByWithDirection(i => i.Importance, descending)
                 .ToList();

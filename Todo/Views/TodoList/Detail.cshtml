@@ -1,7 +1,4 @@
-﻿@using Todo.Controllers
-@using Todo.Data.Entities
-@using Todo.Services
-@model Todo.Models.TodoLists.TodoListDetailViewmodel
+﻿@model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @{
     ViewData["Title"] = $"List: {Model.Title}";
@@ -9,61 +6,28 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div class="col-md-6">
-
-    <ul class="list-group">
-
-        <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
-                <strong>Add New Item</strong>
-            </a>
-        </li>
-
-        @foreach (var item in Model.Items)
-        {
-            string contextualClass;
-            switch (item.Importance)
-            {
-                case Importance.High:
-                    contextualClass = "list-group-item-danger";
-                    break;
-                case Importance.Low:
-                    contextualClass = "list-group-item-info";
-                    break;
-                default:
-                    contextualClass = "";
-                    break;
-            }
-
-            <li class="list-group-item @contextualClass">
-                
-                <div class="row">
-
-                <div class="col-md-8">
-                    <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
-
-                        @if (item.IsDone)
-                        {
-                            <s>@item.Title</s>
-                        }
-                        else
-                        {
-                            <text>@item.Title</text>
-                        }
-                    </a>
-                </div>
-
-                <div class="col-md-4 text-right">
-                    <small>
-                        @item.ResponsibleParty.UserName
-
-                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
-
-                    </small>
-                </div>
-                </div>
-
-            </li>
-        }
-    </ul>
+<div class="col-md-6" id="partialListViewContainer">
+    <partial name="_DetailList" model="@Model" />
 </div>
+<div class="col-md-6">
+    @Html.LabelFor(m => m.DoneItemsHidden)
+    <input id="hideDoneCheckBox" type="checkbox" onchange="ReloadList()" />
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function ReloadList() {
+            var doneItemsHidden = !($('#DoneItemsHidden').val() === 'true');
+
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("DetailListPartial"))?todoListId=' + @Model.TodoListId + '&doneItemsHidden=' + doneItemsHidden,
+                success: function (data) {
+                    $('#partialListViewContainer').html(data);
+                }
+            });
+        };
+
+    </script>
+}

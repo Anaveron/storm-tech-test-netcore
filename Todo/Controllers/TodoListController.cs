@@ -34,8 +34,15 @@ namespace Todo.Controllers
         public IActionResult Detail(int todoListId)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, false);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, false, false);
             return View(viewmodel);
+        }
+
+        public IActionResult DetailListPartial(int todoListId, bool doneItemsHidden)
+        {
+            var todoList = dbContext.SingleTodoList(todoListId);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, false, doneItemsHidden);
+            return PartialView("_DetailList", viewmodel);
         }
 
         [HttpGet]
