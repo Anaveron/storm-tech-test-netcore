@@ -1,4 +1,5 @@
-﻿@using Todo.Data.Entities
+﻿@using Microsoft.AspNetCore.Identity
+@using Todo.Data.Entities
 @using Todo.Services
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
@@ -46,10 +47,17 @@
 
                 <div class="col-md-4 text-right">
                     <small>
-                        @item.ResponsibleParty.UserName
-
+                        @{
+                            var gravatarhash = Gravatar.GetHash(item.ResponsibleParty.Email);
+                            var userName = await Gravatar.GetUserNameAsync(gravatarhash, "https://www.gravatar.com");
+                            var fullUserName = item.ResponsibleParty.UserName;
+                            if (!string.IsNullOrWhiteSpace(userName))
+                            {
+                                fullUserName = $"{fullUserName} ({userName})";
+                            }
+                        }
+                        @fullUserName
                         <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30" />
-
                     </small>
                 </div>
             </div>

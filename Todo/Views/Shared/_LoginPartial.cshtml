@@ -19,10 +19,16 @@
                         var iu = await UserManager.GetUserAsync(User);
                         var emailAddress = await UserManager.GetEmailAsync(iu);
                         var gravatarhash = Gravatar.GetHash(emailAddress);
+                        var userName = await Gravatar.GetUserNameAsync(gravatarhash, "https://www.gravatar.com");
+                        var fullUserName = UserManager.GetUserName(User);
+                        if (!string.IsNullOrWhiteSpace(userName))
+                        {
+                            fullUserName = $"{fullUserName} ({userName})";
+                        }
                     }
 
                     <img src="https://www.gravatar.com/avatar/@gravatarhash?s=30" />
-                    @UserManager.GetUserName(User)
+                    @fullUserName
                 </a>
             </li>
             <li>
