@@ -42,7 +42,7 @@ namespace Todo.Controllers
         {
             var todoList = dbContext.SingleTodoList(todoListId);
             var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, false, doneItemsHidden);
-            return PartialView("_DetailList", viewmodel);
+            return PartialView("_DetailListPartial", viewmodel);
         }
 
         [HttpGet]

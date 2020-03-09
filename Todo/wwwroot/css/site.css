@@ -35,3 +35,11 @@ body {
         display: none;
     }
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.right-float {
+    float: right
+}

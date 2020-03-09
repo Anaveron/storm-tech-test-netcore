@@ -6,28 +6,47 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<div class="col-md-6" id="partialListViewContainer">
-    <partial name="_DetailList" model="@Model" />
+<div class="row">
+    <div class="col-md-2">
+        @Html.LabelFor(m => m.DoneItemsHidden)
+        <input id="hideDoneCheckBox" type="checkbox" onchange="ReloadList(1)" />
+    </div>
 </div>
-<div class="col-md-6">
-    @Html.LabelFor(m => m.DoneItemsHidden)
-    <input id="hideDoneCheckBox" type="checkbox" onchange="ReloadList()" />
+<div class="row">
+    <div class="col-md-6" id="partialListViewContainer">
+        <partial name="_DetailListPartial" model="@Model" />
+    </div>
+    <div class="col-md-4" id="partialFormViewContainer">
+    </div>
 </div>
 
-@section Scripts
-{
-    <script type="text/javascript">
-        function ReloadList() {
-            var doneItemsHidden = !($('#DoneItemsHidden').val() === 'true');
+<script type="text/javascript">
+    function ReloadList(toggleHide) {
+        var doneItemsHidden;
 
-            $.ajax({
-                type: 'GET',
-                url: '@Html.Raw(Url.Action("DetailListPartial"))?todoListId=' + @Model.TodoListId + '&doneItemsHidden=' + doneItemsHidden,
-                success: function (data) {
-                    $('#partialListViewContainer').html(data);
-                }
-            });
-        };
+        if (toggleHide === 1) {
+            doneItemsHidden = !($('#DoneItemsHidden').val() === 'true');
+            console.log('hidden' + ' ' + doneItemsHidden);
+        } else {
+            doneItemsHidden = ($('#DoneItemsHidden').val() === 'true');
+            console.log('not hidden' + ' ' + doneItemsHidden);
+        }
 
-    </script>
-}
+        $.ajax({
+            type: 'GET',
+            url: '@Html.Raw(Url.Action("DetailListPartial"))?todoListId=' + @Model.TodoListId + '&doneItemsHidden=' + doneItemsHidden,
+            success: function (data) {
+                $('#partialListViewContainer').html(data);
+            }
+        });
+    };
+    function ShowCreateNewForm() {
+        $.ajax({
+            type: 'GET',
+            url: '@Html.Raw(Url.Action("CreatePartial","TodoItem"))?todoListId=' + @Model.TodoListId,
+            success: function(data) {
+                $('#partialFormViewContainer').html(data);
+            }
+        });
+    };
+</script>
