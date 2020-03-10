@@ -9,6 +9,19 @@
         <a onclick="ShowCreateNewForm()" class="cursor-pointer">
             <strong>Add New Item</strong>
         </a>
+        <a id="sortPartialListLink" class="cursor-pointer right-float" onclick="ReloadList(0, 1)">
+            <strong>
+                <span>Sort</span>
+                @if (Model.DescendingSortOrder)
+                {
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-arrow-up"></span>
+                }
+            </strong>
+        </a>
     </li>
 
     @foreach (var item in Model.Items)
@@ -66,3 +79,4 @@
     }
 </ul>
 @Html.HiddenFor(f => f.DoneItemsHidden)
+@Html.HiddenFor(f => f.DescendingSortOrder)

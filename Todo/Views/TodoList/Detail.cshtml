@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-md-2">
         @Html.LabelFor(m => m.DoneItemsHidden)
-        <input id="hideDoneCheckBox" type="checkbox" onchange="ReloadList(1)" />
+        <input id="hideDoneCheckBox" type="checkbox" onchange="ReloadList(1, 0)" />
     </div>
 </div>
 <div class="row">
@@ -21,32 +21,38 @@
 </div>
 
 <script type="text/javascript">
-    function ReloadList(toggleHide) {
-        var doneItemsHidden;
+        function ReloadList(toggleHide, toggleSort) {
+            var doneItemsHidden;
+            var descendingSortOrder;
 
-        if (toggleHide === 1) {
-            doneItemsHidden = !($('#DoneItemsHidden').val() === 'true');
-            console.log('hidden' + ' ' + doneItemsHidden);
-        } else {
-            doneItemsHidden = ($('#DoneItemsHidden').val() === 'true');
-            console.log('not hidden' + ' ' + doneItemsHidden);
-        }
+            if (toggleHide === 1) {
+                doneItemsHidden = !($('#DoneItemsHidden').val() === 'true');
+            } else {
+                doneItemsHidden = ($('#DoneItemsHidden').val() === 'true');
+            }
 
-        $.ajax({
-            type: 'GET',
-            url: '@Html.Raw(Url.Action("DetailListPartial"))?todoListId=' + @Model.TodoListId + '&doneItemsHidden=' + doneItemsHidden,
-            success: function (data) {
-                $('#partialListViewContainer').html(data);
+            if (toggleSort === 1) {
+                descendingSortOrder = !($('#DescendingSortOrder').val() === 'true');
+            } else {
+                descendingSortOrder = ($('#DescendingSortOrder').val() === 'true');
             }
-        });
+
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("DetailListPartial"))?todoListId=' + @Model.TodoListId + '&doneItemsHidden=' + doneItemsHidden + '&descendingSortOrder=' + descendingSortOrder,
+                success: function (data) {
+                    $('#partialListViewContainer').html(data);
+                }
+            });
     };
-    function ShowCreateNewForm() {
-        $.ajax({
-            type: 'GET',
-            url: '@Html.Raw(Url.Action("CreatePartial","TodoItem"))?todoListId=' + @Model.TodoListId,
-            success: function(data) {
-                $('#partialFormViewContainer').html(data);
-            }
-        });
-    };
+
+        function ShowCreateNewForm() {
+            $.ajax({
+                type: 'GET',
+                url: '@Html.Raw(Url.Action("CreatePartial","TodoItem"))?todoListId=' + @Model.TodoListId,
+                success: function(data) {
+                    $('#partialFormViewContainer').html(data);
+                }
+            });
+        };
 </script>

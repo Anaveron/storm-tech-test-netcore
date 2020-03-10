@@ -38,10 +38,10 @@ namespace Todo.Controllers
             return View(viewmodel);
         }
 
-        public IActionResult DetailListPartial(int todoListId, bool doneItemsHidden)
+        public IActionResult DetailListPartial(int todoListId, bool doneItemsHidden, bool descendingSortOrder)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, false, doneItemsHidden);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, descendingSortOrder, doneItemsHidden);
             return PartialView("_DetailListPartial", viewmodel);
         }
 

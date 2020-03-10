@@ -63,7 +63,7 @@
     $(function() {
 
         $("#createPartialViewForm").submit(function(e) {
-            e.preventDefault(); 
+            e.preventDefault();
 
             var actionUrl = '@Url.Action("CreatePartial","TodoItem")';
 
@@ -71,7 +71,7 @@
                 $(this).serialize(),
                 function(data) {
                     $("#partialFormViewContainer").html(data);
-                    ReloadList(0);
+                    ReloadList(0, 0);
                 });
         });
 
